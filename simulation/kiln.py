@@ -14,9 +14,10 @@ class Kiln:
 
 		self.temperature = new_temperature
 
-kiln = Kiln()
-kiln.on = True
+if __name__ == '__main__':
+	kiln = Kiln()
+	kiln.on = True
 
-for _ in range(2000):
-	print(kiln.temperature)
-	kiln.tick()
+	for _ in range(2000):
+		print(kiln.temperature)
+		kiln.tick()
