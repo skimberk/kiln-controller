@@ -2,11 +2,19 @@ from kiln import Kiln
 
 kiln = Kiln()
 
-for _ in range(600):
-	if kiln.temperature < 100:
+last_temperature = 0
+target = 1000
+
+for _ in range(1800):
+	slope = kiln.temperature - last_temperature
+	error = target - kiln.temperature
+
+	if error > 0 and (target - (kiln.temperature + 10 * slope)) > 0:
 		kiln.on = True
 	else:
 		kiln.on = False
+
+	last_temperature = kiln.temperature
 
 	kiln.tick()
 
