@@ -17,7 +17,7 @@ I'm using a Raspberry Pi Zero W.
 
 ### Installing OS
 
-1. Downloaded and unzipped Raspberry Pi OS (32-bit) Lite (kernal version 4.19) from here https://www.raspberrypi.org/downloads/raspberry-pi-os/
+1. Downloaded and unzipped Raspberry Pi OS (32-bit) Lite (kernel version 4.19) from here https://www.raspberrypi.org/downloads/raspberry-pi-os/
 2. Flashed image to SD card using Etcher (the application is called balenaEtcher)
 3. Removed and reinserted SD card then followed this tutorial to make it SSH-able via USB: https://desertbot.io/blog/ssh-into-pi-zero-over-usb (the `ssh-keygen` step didn't work, so I skipped right to SSH-ing which seemed to be ok)
 4. Installed vim with `sudo apt-get install vim`
@@ -36,3 +36,4 @@ I ran the `blinkatest.py` script they included at the end, and it worked!
 ### Other necessary stuff
 
 1. Installed drivers for thermocouple amplifier: `pip3 install adafruit-circuitpython-max31855`
+2. Cloned this repository
