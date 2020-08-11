@@ -19,17 +19,17 @@ def cleanup():
 atexit.register(cleanup)
 
 while True:
-    tempC = max31855.temperature
-    tempF = tempC * 9 / 5 + 32
+	tempC = max31855.temperature
+	tempF = tempC * 9 / 5 + 32
 
-    tempInt = int(tempF)
-    print(tempInt)
+	tempInt = int(tempF)
+	print(tempInt)
 
-    Display.Show([
-    	tempInt % 10,
-    	(tempInt // 10) % 10,
-    	(tempInt // 100) % 10,
-    	(tempInt // 100) % 10
-    ])
+	Display.Show([
+		(tempInt // 100) % 10,
+		(tempInt // 100) % 10,
+		(tempInt // 10) % 10,
+		tempInt % 10,
+	])
 
-    time.sleep(1.0)
+	time.sleep(1.0)
