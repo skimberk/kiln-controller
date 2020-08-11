@@ -26,7 +26,7 @@ while True:
 	print(tempInt)
 
 	Display.Show([
-		(tempInt // 100) % 10,
+		(tempInt // 1000) % 10,
 		(tempInt // 100) % 10,
 		(tempInt // 10) % 10,
 		tempInt % 10,

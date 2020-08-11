@@ -37,3 +37,15 @@ I ran the `blinkatest.py` script they included at the end, and it worked!
 
 1. Installed drivers for thermocouple amplifier: `pip3 install adafruit-circuitpython-max31855`
 2. Cloned this repository
+
+### Running script on startup
+
+I used cron: https://www.raspberrypi.org/documentation/linux/usage/cron.md
+
+Ran `crontab -e` then added `@reboot python3 /home/pi/kiln-controller/control/temperature-readout.py &`
+
+### Shutting down
+
+```
+sudo shutdown -h now
+```
