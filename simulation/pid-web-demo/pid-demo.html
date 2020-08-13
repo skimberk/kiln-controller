@@ -60,11 +60,13 @@
 		};
 
 		// Demo using PID
-		var pidX = new PID(1, 0.001, 0.1);
+		var pidX = new PID(0.034, 0.00005, 0);
+		// var pidX = new PID(0.034, 0.00005, 0);
 		var targetX = 100;
 		var x = 0;
+		var vX = 0;
 
-		var wind = 0;
+		var wind = 5;
 
 		var chaserElement = document.getElementById('chaser');
 		var targetElement = document.getElementById('target');
@@ -72,9 +74,17 @@
 		var counter = 0;
 
 		var tick = function() {
-			var pidXOutput = pidX.update(x, targetX, Date.now());
+			counter += 1;
 
-			x += Math.min(Math.max(pidXOutput, -5), 5); // Restrict to [-10, 10]
+			if (counter % 30 === 0) {
+				var pidXOutput = pidX.update(x, targetX, Date.now());
+				if (pidXOutput !== null) {
+					vX = pidXOutput;
+					// vX = Math.min(Math.max(pidXOutput, -10), 10); // Restrict to [-10, 10]
+				}
+			}
+
+			x += vX;
 			x -= wind;
 
 			chaserElement.style.left = x + 'px';
@@ -82,8 +92,7 @@
 
 			console.log(x);
 
-			counter += 1;
-			if (counter === 100) {
+			if (counter === 300) {
 				targetX = 100 * Math.floor(10 * Math.random());
 				counter = 0;
 			}
