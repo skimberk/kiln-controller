@@ -29,10 +29,13 @@
 
 	<script>
 		// PID Implementation
-		var PID = function(kp, ki, kd) {
+		var PID = function(kp, ki, kd, min, max) {
 			this.kp = kp;
 			this.ki = ki;
 			this.kd = kd;
+
+			this.min = min;
+			this.max = max;
 
 			this.last_error = null;
 			this.last_time = null;
@@ -50,17 +53,26 @@
 			}
 
 			var dt = time - this.last_time;
-			this.integral += error * dt;
+
+			// Use ki when calculating integral to prevent massive growth
+			// and keep output from jumping when changing ki
+			this.integral += this.ki * error * dt; 
 			var derivative = (error - this.last_error) / dt;
 
 			this.last_error = error;
 			this.last_time = time;
 
-			return this.kp * error + this.ki * this.integral + this.kd * derivative;
+			// Clamp integral and output
+			// Clamping integral reduces windup
+			this.integral = Math.min(Math.max(this.integral, this.min), this.max);
+			var output = this.kp * error + this.integral + this.kd * derivative;
+			output = Math.min(Math.max(output, this.min), this.max);
+
+			return output;
 		};
 
 		// Demo using PID
-		var pidX = new PID(0.034, 0.00005, 0);
+		var pidX = new PID(0.034, 0.00005, 0, -10, 10);
 		// var pidX = new PID(0.034, 0.00005, 0);
 		var targetX = 100;
 		var x = 0;
@@ -80,7 +92,6 @@
 				var pidXOutput = pidX.update(x, targetX, Date.now());
 				if (pidXOutput !== null) {
 					vX = pidXOutput;
-					// vX = Math.min(Math.max(pidXOutput, -10), 10); // Restrict to [-10, 10]
 				}
 			}
 
