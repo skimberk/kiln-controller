@@ -9,13 +9,10 @@ target = 300
 for x in range(1000):
 	pid_out = pid.update(kiln.temperature, target, x)
 
-	if pid_out[0] is not None:
+	if pid_out is not None:
 		print(pid_out)
 
-		pid_sum = pid_out[0] + pid_out[1] + pid_out[2]
-		print(pid_sum)
-
-		pid_transformed = 1 / (1 + 1.5 ** (-pid_sum))
+		pid_transformed = 1 / (1 + 1.5 ** (-pid_out))
 
 		kiln.on = (pid_transformed >= 0.5)
 

@@ -1,10 +1,9 @@
 class PID:
-	def __init__(self, k_p, k_i, k_d):
-		self.k_p = k_p
-		self.k_i = k_i
-		self.k_d = k_d
+	def __init__(self, kp, ki, kd):
+		self.kp = kp
+		self.ki = ki
+		self.kd = kd
 
-		self.last_value = None
 		self.last_error = None
 		self.last_time = None
 		self.integral = 0
@@ -13,20 +12,17 @@ class PID:
 		error = target - value
 
 		if self.last_value is not None:
-			self.integral += (time - self.last_time) * (error + self.last_error) / 2
+			dt = time - self.last_time
+			self.integral += error * dt
+			derivative = (error - self.last_error) / dt
 
-			p = self.k_p * error
-			i = self.k_i * self.integral
-			d = self.k_d * (error - self.last_error) / (time - self.last_time)
-
-			self.last_value = value
 			self.last_time = time
 			self.last_error = error
 
-			return [p, i, d]
+			return kp * error + ki * self.integral + kd * derivative
 		else:
 			self.last_value = value
 			self.last_time = time
 			self.last_error = error
 
-			return [None, None, None]
+			return None

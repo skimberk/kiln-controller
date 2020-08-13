@@ -42,9 +42,7 @@ while True:
 		print(tempF)
 
 		pid_out = pid.update(tempF, goal_temperature, int(time.time()))
-		if pid_out[0] is not None:
-			print('PID', pid_out)
-			print('PID', pid_out[0] + pid_out[1] + pid_out[2])
+		print('PID', pid_out)
 
 		slope = tempF - last_temperature
 		error = goal_temperature - tempF
