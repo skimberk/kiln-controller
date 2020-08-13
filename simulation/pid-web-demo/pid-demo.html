@@ -72,13 +72,14 @@
 		};
 
 		// Demo using PID
+		// var pidX = new PID(0.02, 0.00001, 0, -10, 10);
 		var pidX = new PID(0.034, 0.00005, 0, -10, 10);
 		// var pidX = new PID(0.034, 0.00005, 0);
 		var targetX = 100;
 		var x = 0;
 		var vX = 0;
 
-		var wind = 5;
+		var wind = 8;
 
 		var chaserElement = document.getElementById('chaser');
 		var targetElement = document.getElementById('target');
@@ -86,9 +87,9 @@
 		var counter = 0;
 
 		var tick = function() {
-			counter += 1;
+			counter = (counter + 1) % 30;
 
-			if (counter % 30 === 0) {
+			if (counter === 0) {
 				var pidXOutput = pidX.update(x, targetX, Date.now());
 				if (pidXOutput !== null) {
 					vX = pidXOutput;
@@ -103,15 +104,14 @@
 
 			console.log(x);
 
-			if (counter === 300) {
-				targetX = 100 * Math.floor(10 * Math.random());
-				counter = 0;
-			}
-
 			requestAnimationFrame(tick);
 		};
 
 		requestAnimationFrame(tick);
+
+		window.addEventListener('mousemove', function(e) {
+			targetX = e.pageX
+		}, false);
 	</script>
 </body>
 </html>
