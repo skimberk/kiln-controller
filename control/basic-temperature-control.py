@@ -31,6 +31,9 @@ pid = PID(1, 1, 1)
 while True:
 	try:
 		tempC = max31855.temperature
+
+		if tempC == 0:
+			raise RuntimeError('temperature is exactly zero, probably an issue')
 	except RuntimeError:
 		print('runtime error')
 		# Display.Show([0, 0, 0, 0])
