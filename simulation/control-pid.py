@@ -7,7 +7,7 @@ pid = PID(0.02, 0.00005, 0, 0, 1)
 target = 300
 period = 10
 
-for tick_num in range(1200):
+for tick_num in range(1900):
 	pid_out = pid.update(kiln.temperature, target, tick_num)
 
 	if pid_out is not None:
@@ -28,4 +28,10 @@ for tick_num in range(1200):
 		target = 600
 	elif tick_num == 500:
 		target = 1080
+	elif tick_num >= 1200 and tick_num < 1500:
+		target -= 2
+		print('Target', target)
+	elif tick_num >= 1500 and tick_num < 1700:
+		target += 2
+		print('Target', target)
 	
