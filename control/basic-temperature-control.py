@@ -6,6 +6,7 @@ import busio
 import digitalio
 import adafruit_max31855
 import RPi.GPIO as GPIO
+from pid import PID
 
 Display = tm1637.TM1637(CLK=21, DIO=20, brightness=1.0)
 
@@ -25,6 +26,8 @@ atexit.register(cleanup)
 goal_temperature = 652
 last_temperature = 0
 
+pid = PID(1, 1, 1)
+
 while True:
 	try:
 		tempC = max31855.temperature
@@ -34,6 +37,11 @@ while True:
 	else:
 		tempF = tempC * 9 / 5 + 32
 		print(tempF)
+
+		pid_out = pid.update(tempF, goal_temperature, int(time.time()))
+		if pid_out[0] is not None:
+			print('PID', pid_out)
+			print('PID', pid_out[0] + pid_out[1] + pid_out[2])
 
 		slope = tempF - last_temperature
 		error = goal_temperature - tempF
