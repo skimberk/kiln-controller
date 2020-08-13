@@ -32,7 +32,7 @@ while True:
 		print(tempF)
 
 		slope = tempF - last_temperature
-		error = target - tempF
+		error = goal_temperature - tempF
 
 		if error > 0 and (goal_temperature - (tempF + 10 * slope)) > 0:
 			GPIO.output(16, GPIO.HIGH)
