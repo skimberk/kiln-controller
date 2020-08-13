@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>PID Demo</title>
+
+	<style>
+		#chaser, #target {
+			position: absolute;
+			left: 0px;
+			width: 20px;
+			height: 20px;
+		}
+
+		#chaser {
+			top: 20px;
+			background: #f00;
+		}
+
+		#target {
+			top: 60px;
+			background: #0f0;
+		}
+	</style>
+</head>
+<body>
+	<div id="chaser"></div>
+	<div id="target"></div>
+
+	<script>
+		// PID Implementation
+		var PID = function(kp, ki, kd) {
+			this.kp = kp;
+			this.ki = ki;
+			this.kd = kd;
+
+			this.last_error = null;
+			this.last_time = null;
+			this.integral = 0;
+		};
+
+		PID.prototype.update = function(value, target, time) {
+			var error = target - value;
+
+			if (this.last_error === null) {
+				this.last_error = error;
+				this.last_time = time;
+
+				return null;
+			}
+
+			var dt = time - this.last_time;
+			this.integral += error * dt;
+			var derivative = (error - this.last_error) / dt;
+
+			this.last_error = error;
+			this.last_time = time;
+
+			return this.kp * error + this.ki * this.integral + this.kd * derivative;
+		};
+
+		// Demo using PID
+		var pidX = new PID(1, 0.001, 0.1);
+		var targetX = 100;
+		var x = 0;
+
+		var wind = 0;
+
+		var chaserElement = document.getElementById('chaser');
+		var targetElement = document.getElementById('target');
+
+		var counter = 0;
+
+		var tick = function() {
+			var pidXOutput = pidX.update(x, targetX, Date.now());
+
+			x += Math.min(Math.max(pidXOutput, -5), 5); // Restrict to [-10, 10]
+			x -= wind;
+
+			chaserElement.style.left = x + 'px';
+			targetElement.style.left = targetX + 'px';
+
+			console.log(x);
+
+			counter += 1;
+			if (counter === 100) {
+				targetX = 100 * Math.floor(10 * Math.random());
+				counter = 0;
+			}
+
+			requestAnimationFrame(tick);
+		};
+
+		requestAnimationFrame(tick);
+	</script>
+</body>
+</html>
