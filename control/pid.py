@@ -1,8 +1,11 @@
 class PID:
-	def __init__(self, kp, ki, kd):
+	def __init__(self, kp, ki, kd, min_out, max_out):
 		self.kp = kp
 		self.ki = ki
 		self.kd = kd
+
+		self.min_out = min_out
+		self.max_out = max_out
 
 		self.last_error = None
 		self.last_time = None
@@ -11,18 +14,27 @@ class PID:
 	def update(self, value, target, time):
 		error = target - value
 
-		if self.last_value is not None:
-			dt = time - self.last_time
-			self.integral += error * dt
-			derivative = (error - self.last_error) / dt
-
-			self.last_time = time
+		if self.last_error is None:
 			self.last_error = error
-
-			return kp * error + ki * self.integral + kd * derivative
-		else:
-			self.last_value = value
 			self.last_time = time
-			self.last_error = error
-
 			return None
+
+		dt = time - self.last_time
+
+		# Use ki when calculating integral to prevent massive growth
+		# and keep output from jumping when changing ki
+		self.integral += self.ki * error * dt
+		derivative = (error - self.last_error) / dt
+
+		# multiplied by ki above (because multiplication is distributive)
+		output = kp * error + self.integral + kd * derivative
+
+		# Clamp integral and output
+		# Clamping integral reduces windup
+		self.integral = min(max(self.integral, self.min_out), self.max_out)
+		output = min(max(output, self.min_out), self.max_out)
+
+		self.last_time = time
+		self.last_error = error
+
+		return output
