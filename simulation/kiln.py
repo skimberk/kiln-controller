@@ -21,6 +21,10 @@ class Kiln:
 		self.temperature = new_temperature
 		self.element_temperature = new_element_temperature
 
+	def multi_tick(self, n):
+		for _ in range(n):
+			self.tick()
+
 if __name__ == '__main__':
 	kiln = Kiln()
 	kiln.on = True

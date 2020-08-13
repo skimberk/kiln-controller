@@ -2,21 +2,30 @@ from kiln import Kiln
 from pid import PID
 
 kiln = Kiln()
-pid = PID(1, 0.00001, 0.1)
+pid = PID(0.02, 0.00005, 0, 0, 1)
 
 target = 300
+period = 10
 
-for x in range(1000):
-	pid_out = pid.update(kiln.temperature, target, x)
+for tick_num in range(1200):
+	pid_out = pid.update(kiln.temperature, target, tick_num)
 
 	if pid_out is not None:
-		print(pid_out)
+		ticks_on = round(period * pid_out)
+		ticks_off = period - ticks_on
 
-		pid_transformed = 1 / (1 + 1.5 ** (-pid_out))
+		if ticks_off > 0:
+			kiln.on = False
+			kiln.multi_tick(ticks_off)
 
-		kiln.on = (pid_transformed >= 0.5)
+		if ticks_on > 0:
+			kiln.on = True
+			kiln.multi_tick(ticks_on)
 
-	print('On' if kiln.on else 'Off', 'Kiln', kiln.temperature, 'Element', kiln.element_temperature)
+		print('Kiln', kiln.temperature, 'Element', kiln.element_temperature, 'Duty cycle', ticks_on / period)
 
-	kiln.tick()
+	if tick_num == 100:
+		target = 600
+	elif tick_num == 500:
+		target = 1080
 	

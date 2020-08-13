@@ -27,7 +27,7 @@ class PID:
 		derivative = (error - self.last_error) / dt
 
 		# multiplied by ki above (because multiplication is distributive)
-		output = kp * error + self.integral + kd * derivative
+		output = self.kp * error + self.integral + self.kd * derivative
 
 		# Clamp integral and output
 		# Clamping integral reduces windup
