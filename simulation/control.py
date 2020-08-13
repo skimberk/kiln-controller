@@ -1,11 +1,13 @@
 from kiln import Kiln
+from pid import PID
 
 kiln = Kiln()
+pid = PID(1, 0.0001, 1)
 
 last_temperature = 0
-target = 1000
+target = 300
 
-for _ in range(1800):
+for x in range(300):
 	slope = kiln.temperature - last_temperature
 	error = target - kiln.temperature
 
@@ -19,3 +21,8 @@ for _ in range(1800):
 	kiln.tick()
 
 	print('On' if kiln.on else 'Off', 'Kiln', kiln.temperature, 'Element', kiln.element_temperature)
+	pid_out = pid.update(kiln.temperature, target, x)
+
+	if pid_out[0] is not None:
+		print(pid_out)
+		print(pid_out[0] + pid_out[1] + pid_out[2])
