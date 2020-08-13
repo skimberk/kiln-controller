@@ -5,6 +5,7 @@ import board
 import busio
 import digitalio
 import adafruit_max31855
+import RPi.GPIO as GPIO
 
 Display = tm1637.TM1637(CLK=21, DIO=20, brightness=1.0)
 
@@ -12,6 +13,9 @@ spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
 cs = digitalio.DigitalInOut(board.D5)
 
 max31855 = adafruit_max31855.MAX31855(spi, cs)
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(16, GPIO.OUT)
 
 def cleanup():
 	Display.cleanup()
