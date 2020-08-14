@@ -73,14 +73,14 @@
 
 		// Demo using PID
 		// var pidX = new PID(0.02, 0.00001, 0, -10, 10);
-		// var pidX = new PID(0.034, 0.00005, 0, -10, 10);
-		var pidX = new PID(0.01, 0.000005, 0, -10, 10);
+		var pidX = new PID(0.034, 0.00005, 0, -10, 10);
+		// var pidX = new PID(0.01, 0.000005, 0, -10, 10);
 		// var pidX = new PID(0.034, 0.00005, 0);
 		var targetX = 100;
 		var x = 0;
 
 		var vX = 0;
-		var nextVX = 0;
+		// var nextVX = 0;
 
 		var wind = 5;
 
@@ -94,11 +94,11 @@
 			counter = (counter + 1) % 30;
 
 			if (counter === 0) {
-				vX = nextVX;
+				// vX = nextVX;
 
 				var pidXOutput = pidX.update(x, targetX, Date.now());
 				if (pidXOutput !== null) {
-					nextVX = pidXOutput;
+					vX = pidXOutput;
 				}
 
 				moveCounter += 1;
