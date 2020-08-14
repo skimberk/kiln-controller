@@ -35,14 +35,16 @@ while True:
 		last_good_temperature = tempF
 
 	pid_out = pid.update(last_good_temperature, goal_temperature, time.time())
+	print(pid_out)
 
-	time_on = period * pid_out
-	time_off = period - time_on
+	if pid_out is not None:
+		time_on = period * pid_out
+		time_off = period - time_on
 
-	if time_off > 0:
-		GPIO.output(16, GPIO.LOW)
-		sleep(time_off)
+		if time_off > 0:
+			GPIO.output(16, GPIO.LOW)
+			sleep(time_off)
 
-	if time_on > 0:
-		GPIO.output(16, GPIO.HIGH)
-		sleep(time_on)
+		if time_on > 0:
+			GPIO.output(16, GPIO.HIGH)
+			sleep(time_on)
