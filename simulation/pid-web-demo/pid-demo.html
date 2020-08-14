@@ -73,27 +73,35 @@
 
 		// Demo using PID
 		// var pidX = new PID(0.02, 0.00001, 0, -10, 10);
-		var pidX = new PID(0.034, 0.00005, 0, -10, 10);
+		// var pidX = new PID(0.034, 0.00005, 0, -10, 10);
+		var pidX = new PID(0.01, 0.000005, 0, -10, 10);
 		// var pidX = new PID(0.034, 0.00005, 0);
 		var targetX = 100;
 		var x = 0;
-		var vX = 0;
 
-		var wind = 8;
+		var vX = 0;
+		var nextVX = 0;
+
+		var wind = 5;
 
 		var chaserElement = document.getElementById('chaser');
 		var targetElement = document.getElementById('target');
 
 		var counter = 0;
+		var moveCounter = 0;
 
 		var tick = function() {
 			counter = (counter + 1) % 30;
 
 			if (counter === 0) {
+				vX = nextVX;
+
 				var pidXOutput = pidX.update(x, targetX, Date.now());
 				if (pidXOutput !== null) {
-					vX = pidXOutput;
+					nextVX = pidXOutput;
 				}
+
+				moveCounter += 1;
 			}
 
 			x += vX;
@@ -103,6 +111,10 @@
 			targetElement.style.left = targetX + 'px';
 
 			console.log(x);
+
+			if (moveCounter < 10) {
+				targetX += counter < 15 ? 1 : 0;
+			}
 
 			requestAnimationFrame(tick);
 		};
