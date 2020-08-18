@@ -49,3 +49,7 @@ Ran `crontab -e` then added `@reboot python3 /home/pi/kiln-controller/control/te
 ```
 sudo shutdown -h now
 ```
+
+### Issues (and solutions)
+
+Connected a 1.5" OLED SSD1351 display (cheap one off Amazon) via SPI. I was using the luma.oled package to run it. It was updating extremely slowly, I'd see the scan lines slowly move down the display even when I was drawing text. I ran the luma `perfloop.py` example and it only achieved 0.25 FPS. At first, I thought there might be something wrong with my Raspberry Pi's SPI speed. However, I realized that I was running another python process which was reading from a thermocouple using SPI (using Adafruit's `busio` package). I killed this process, and, lo and behold, my display now updated much faster.
