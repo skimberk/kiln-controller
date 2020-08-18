@@ -27,7 +27,7 @@
 This is a CircuitPython driver for the Maxim Integrated MAX31855 thermocouple
 amplifier module.
 
-* Author(s): Radomir Dopieralski, Sebastian Kimberk
+* Author(s): Radomir Dopieralski
 
 Implementation Notes
 --------------------
@@ -37,6 +37,11 @@ Implementation Notes
 * Adafruit `MAX31855 Thermocouple Amplifier Breakout
   <https://www.adafruit.com/product/269>`_ (Product ID: 269)
 
+**Software and Dependencies:**
+
+* Adafruit CircuitPython firmware for the ESP8622 and M0-based boards:
+  https://github.com/adafruit/circuitpython/releases
+* Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 import math
 
@@ -45,7 +50,10 @@ try:
 except ImportError:
     import ustruct as struct
 
-import spidev
+from adafruit_bus_device.spi_device import SPIDevice
+
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_MAX31855.git"
 
 
 class MAX31855:
@@ -53,25 +61,23 @@ class MAX31855:
     Driver for the MAX31855 thermocouple amplifier.
     """
 
-    def __init__(self, bus, device, bus_speed_hz=8000000):
-        self.spi_device = spidev.SpiDev(bus, device)
-        self.spi_device.max_speed_hz = bus_speed_hz
-
-    def cleanup(self):
-        self.spi_device.close()
+    def __init__(self, spi, cs):
+        self.spi_device = SPIDevice(spi, cs)
+        self.data = bytearray(4)
 
     def _read(self, internal=False):
-        data = bytes(self.spi_device.readbytes(4))
-
-        if data[3] & 0x01:
+        with self.spi_device as spi:
+            spi.readinto(self.data)  # pylint: disable=no-member
+        print(self.data)
+        if self.data[3] & 0x01:
             raise RuntimeError("thermocouple not connected")
-        if data[3] & 0x02:
+        if self.data[3] & 0x02:
             raise RuntimeError("short circuit to ground")
-        if data[3] & 0x04:
+        if self.data[3] & 0x04:
             raise RuntimeError("short circuit to power")
-        if data[1] & 0x01:
+        if self.data[1] & 0x01:
             raise RuntimeError("faulty reading")
-        temp, refer = struct.unpack(">hh", data)
+        temp, refer = struct.unpack(">hh", self.data)
         refer >>= 4
         temp >>= 2
         if internal:
