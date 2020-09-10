@@ -76,7 +76,6 @@ def update_display():
 
 async def update_loop():
 	while True:
-		print('update loop!')
 		update_temperatures()
 		update_display()
 		await asyncio.sleep(1)
@@ -86,7 +85,6 @@ async def duty_loop():
 	global duty_cycle
 
 	while True:
-		print('duty loop!')
 		if callback is None:
 			await asyncio.sleep(1)
 		else:
