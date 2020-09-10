@@ -1,5 +1,6 @@
 import time
 import asyncio
+import os
 
 import PIL.ImageFont
 import luma.core.interface.serial
@@ -18,8 +19,11 @@ thermocouple = max31855.MAX31855(0, 1)
 RPi.GPIO.setmode(RPi.GPIO.BCM)
 RPi.GPIO.setup(16, RPi.GPIO.OUT)
 
-fnt_53 = PIL.ImageFont.truetype("SourceCodeVariable-Roman.ttf", 53)
-fnt_24 = PIL.ImageFont.truetype("SourceCodeVariable-Roman.ttf", 20)
+file_dir = os.path.dirname(os.path.realpath(__file__))
+font_path = os.path.join(file_dir, "SourceCodeVariable-Roman.ttf")
+
+fnt_53 = PIL.ImageFont.truetype(font_path, 53)
+fnt_24 = PIL.ImageFont.truetype(font_path, 20)
 
 pid = PID(0.02, 0.00005, 0, 0, 1)
 period = 10
