@@ -27,11 +27,13 @@ def callback(thermocouple_temp):
 	elif temp >= 1911 and stage == 1:
 		stage = 2
 	elif stage == 2:
+		temp = 1911
 		counter += all_inclusive.period
 		if counter >= 60 * 10:
 			stage = 3
 			counter = 0
 	elif stage == 3:
+		temp = 1811
 		counter += all_inclusive.period
 		if counter >= 60 * 30:
 			stage = 4
