@@ -2,6 +2,7 @@ import time
 import asyncio
 import os
 import atexit
+import signal
 
 import PIL.ImageFont
 import luma.core.interface.serial
@@ -126,3 +127,5 @@ def cleanup():
 	RPi.GPIO.output(16, RPi.GPIO.LOW)
 
 atexit.register(cleanup)
+signal.signal(signal.SIGTERM, cleanup)
+signal.signal(signal.SIGINT, cleanup)
