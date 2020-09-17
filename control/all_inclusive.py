@@ -1,6 +1,7 @@
 import time
 import asyncio
 import os
+import atexit
 
 import PIL.ImageFont
 import luma.core.interface.serial
@@ -119,3 +120,9 @@ loop.create_task(duty_loop())
 
 def start():
 	loop.run_forever()
+
+def cleanup():
+	device.cleanup()
+	RPi.GPIO.output(16, RPi.GPIO.LOW)
+
+atexit.register(cleanup)
