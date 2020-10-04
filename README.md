@@ -44,6 +44,14 @@ I used cron: https://www.raspberrypi.org/documentation/linux/usage/cron.md
 
 Ran `crontab -e` then added `@reboot python3 /home/pi/kiln-controller/control/temperature-readout.py &`
 
+### Running script in background
+
+I'm using `nohup`. Example command:
+
+```
+nohup python3 slow_04_bisque.py &> first_slow_bisque.txt &
+```
+
 ### Shutting down
 
 ```
