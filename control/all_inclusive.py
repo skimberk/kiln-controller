@@ -38,6 +38,9 @@ duty_cycle = 0
 
 callback = None
 
+def per_hour(degrees):
+	return degrees / (60 * 60 / period)
+
 def c_to_f(c):
 	return c * 9 / 5 + 32
 
