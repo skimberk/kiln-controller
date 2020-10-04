@@ -29,7 +29,7 @@ def callback(thermocouple_temp):
 	elif temp < 1945:
 		temp += all_inclusive.per_hour(108)
 	else:
-		if counter >= 60 * 10:
+		if counter >= 60 * 20:
 			temp = 0
 		else:
 			counter += all_inclusive.period
